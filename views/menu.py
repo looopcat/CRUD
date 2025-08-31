@@ -32,7 +32,6 @@ def menu_proyecto():
     print("3.7 Volver al menu Principal")
 
 def menu_indicadores():
-    print("4.1 Consultar el valor del Dolar")
-    print("4.2 Consultar el valor del Euro")
-    print("4.3 Consulta de valores recientes de la UF")
-    print("4.4 Volver al menu principal")
+    print("4.1 Mostrar todos los indicadores disponibles")
+    print("4.2 Volver al menú principal")
+

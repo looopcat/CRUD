@@ -1,9 +1,15 @@
-# Configuración de la conexión a la base de datos
-db_config = {
-    'user': 'root',         # Reemplaza 'tu_usuario' con tu nombre de usuario de MySQL
-    'password': 'Inacap.2024',  # Reemplaza 'tu_contraseña' con tu contraseña de MySQL
-    'host': 'localhost',          # 'localhost' si la base de datos está en tu máquina local
-    'database': 'proyecto',  # Nombre de la base de datos que estás utilizando --gestionproyectos
-    'port': 3306                  # Puerto por defecto de MySQL, cámbialo si es necesario
-}
+import sqlite3
+
+# Nombre del archivo de base de datos SQLite
+DB_NAME = "proyecto.db"
+
+def get_connection():
+    """
+    Retorna una conexión a la base de datos SQLite.
+    El archivo 'proyecto.db' se crea automáticamente si no existe.
+    """
+    connection = sqlite3.connect(DB_NAME)
+    # Para obtener filas como diccionarios (opcional, muy útil):
+    connection.row_factory = sqlite3.Row
+    return connection
 

@@ -6,7 +6,7 @@ from controllers.indicadores_controller import IndicadoresController
 from models.departamento import Departamento
 from models.empleado import Empleado
 from models.proyecto import Proyecto
-from models.indicadores import obtener_indicadores, obtener_indicador
+
 
 departamento_controller = DepartamentoController()
 empleado_controller = EmpleadoController()
@@ -37,8 +37,8 @@ def main():
                     for dep in departamentos:
                         print(f"ID: {dep[0]}, Nombre: {dep[1]}")
                     
-                    departamento_id = input("Ingrese el ID del departamento al que pertenece el empleado (opcional): ")
-                    departamento_id = int(departamento_id) if departamento_id else None
+                    
+                    
                     
                     while True:
                         departamento_id = input("Ingrese el ID del departamento al que pertenece el empleado (opcional): ")
@@ -60,8 +60,7 @@ def main():
                     for pro in proyectos:
                         print(f"ID: {pro[0]}, Nombre: {pro[1]}")
                     
-                    proyecto_id = input("Ingrese el ID del proyecto al que pertenece el empleado (opcional): ")
-                    proyecto_id = int(proyecto_id) if proyecto_id else None
+                    
                     
                     while True:
                         proyecto_id = input("Ingrese el ID del proyecto al que pertenece el empleado (opcional): ")
@@ -107,7 +106,7 @@ def main():
                         print("Departamentos disponibles:")
                         departamentos = departamento_controller.listar_departamentos()
                         for dep in departamentos:
-                            print(f"ID: {dep[0]}, Nombre: {dep[1]}")
+                            print(f"ID: {dep[0]}, Nombre: {dep[1]}, Gerente: {dep[2]}")
 
                         nuevo_departamento_id = input("Ingrese el nuevo ID del departamento: ")
                         nuevo_departamento_id = int(nuevo_departamento_id)
@@ -258,32 +257,13 @@ def main():
                 menu_indicadores()
                 sub_opcion = input("Seleccione una opción: ")
 
-                if sub_opcion == "4.1":  # Consultar un indicador específico
-                    nombre = input("Ingrese el nombre del indicador a consultar: ").lower()
-                    indicador = indicadores_controller.consultar_indicador(nombre)
-                    print(indicador if indicador != "Indicador no encontrado." else "Indicador no encontrado.")
-
-                elif sub_opcion == "4.2":  # Listar todos los indicadores
-                    indicadores = indicadores_controller.listar_indicadores()
-                    if indicadores:
-                        print("Indicadores guardados:")
-                        for ind in indicadores:
-                            print(ind)
-                    else:
-                        print("No hay indicadores guardados.")
-
-                elif sub_opcion == "4.3":  # Agregar un nuevo indicador
-                    nombre = input("Ingrese el nombre del indicador: ").lower()
-                    try:
-                        valor_actual = float(input("Ingrese el valor actual del indicador: "))
-                        indicadores_controller.agregar_indicador(nombre, valor_actual)
-                        print(f"Indicador '{nombre}' guardado correctamente.")
-                    except ValueError:
-                        print("El valor ingresado no es válido. Intente nuevamente.")
-                
-                elif sub_opcion == "4.4":  # Volver al menú principal
-                    print("Volviendo al menú principal...")
+                if sub_opcion == "4.1":
+                    indicadores_controller.mostrar_todos_los_indicadores()
+                elif sub_opcion == "4.2":
                     break
+                else:
+                    print("Opción no válida.")
+
 
         elif opcion == "5":  # Salir del sistema
             print("Saliendo del sistema...")

@@ -1,45 +1,39 @@
-import mysql.connector
+import sqlite3
 from models.proyecto import Proyecto
-from config.database import db_config
+from config.database import get_connection
 
 class ProyectoController:
     def __init__(self):
-        self.db_config = db_config
-        self.connection = self.conectar()
+        pass
 
     def conectar(self):
-        return mysql.connector.connect(**self.db_config)
+        return get_connection()
 
     def crear_proyecto(self, proyecto):
-        connection = self.conectar()
+        connection = get_connection()
         cursor = connection.cursor()
-        query = "INSERT INTO Proyecto (nombre, descripcion, fecha) VALUES (%s, %s, %s)"
+        query = "INSERT INTO Proyecto (nombre, descripcion, fecha) VALUES (?, ?, ?)"
         cursor.execute(query, (proyecto.get_nombre(), proyecto.get_descripcion(), proyecto.get_fecha()))
         connection.commit()
         cursor.close()
         connection.close()
 
     def listar_proyectos(self):
-        connection = self.conectar()
+        connection = get_connection()
+        connection.row_factory = None
         cursor = connection.cursor()
         query = "SELECT id, nombre FROM Proyecto"
         cursor.execute(query)
         proyectos = cursor.fetchall()
         cursor.close()
         connection.close()
-        #Crear la tabla formateada
-        ##tabla = "| ID | Departamento | ID Gerente |\n"
-        ##tabla += "|----|--------------|-----------|\n"
-        
-        """for dep in proyectos:
-            tabla += f"| {dep[0]:<2} | {dep[1]:<12} | {dep[2] or 'N/A':<9} |\n"
-        return tabla"""
         return proyectos
 
     def buscar_proyecto_por_id(self, id):
-        connection = self.conectar()
+        connection = get_connection()
+        connection.row_factory = None
         cursor = connection.cursor()
-        query = "SELECT * FROM Proyecto WHERE id = %s"
+        query = "SELECT * FROM Proyecto WHERE id = ?"
         cursor.execute(query, (id,))
         proyecto = cursor.fetchone()
         cursor.close()
@@ -47,27 +41,27 @@ class ProyectoController:
         return proyecto
 
     def modificar_proyecto(self, proyecto):
-        connection = self.conectar()
+        connection = get_connection()
         cursor = connection.cursor()
-        query = "UPDATE Proyecto SET nombre = %s, descripcion = %s, fecha =%s WHERE id = %s"
-        cursor.execute(query, (proyecto.get_nombre(), proyecto.get_descripcion(), proyecto.get_fecha()))
+        query = "UPDATE Proyecto SET nombre = ?, descripcion = ?, fecha =? WHERE id = ?"
+        cursor.execute(query, (proyecto.get_nombre(), proyecto.get_descripcion(), proyecto.get_fecha(), proyecto.get_id()))
         connection.commit()
         cursor.close()
         connection.close()
 
     def eliminar_proyecto(self, id):
-        connection = self.conectar()
+        connection = get_connection()
         cursor = connection.cursor()
-        query = "DELETE FROM Proyecto WHERE id = %s"
+        query = "DELETE FROM Proyecto WHERE id = ?"
         cursor.execute(query, (id,))
         connection.commit()
         cursor.close()
         connection.close()
 
     def asignar_empleado(self, empleado_id, proyecto_id):
-        connection = self.conectar()
+        connection = get_connection()
         cursor = connection.cursor()
-        query = "UPDATE Empleado SET empleado_id = %s WHERE id = %s"
+        query = "UPDATE Empleado SET empleado_id = ? WHERE id = ?"
         cursor.execute(query, (empleado_id, proyecto_id))
         connection.commit()
         cursor.close()
@@ -75,7 +69,8 @@ class ProyectoController:
     
     def validar_id_proyecto(self, proyecto_id):
         cursor = self.connection.cursor()
-        query = "SELECT COUNT(*) FROM Proyecto WHERE id = %s"
+        connection.row_factory = None
+        query = "SELECT COUNT(*) FROM Proyecto WHERE id = ?"
         cursor.execute(query, (proyecto_id,))
         resultado = cursor.fetchone()[0]
         cursor.close()

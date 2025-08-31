@@ -1,37 +1,13 @@
-import requests
-from prettytable import PrettyTable
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from models.indicadores import Indicadores
 
 class IndicadoresController:
-    
-    def consultar_dolar(self):
-        indicador = "dolar"
-        url = f"https://mindicador.cl/api/{indicador}"
-        response = requests.get(url)
-        data = response.json()
+    def __init__(self):
+        self.ind = Indicadores()
 
-        print(f"Valor actual del {data['nombre']}:")
-        print(f"${data['serie'][0]['valor']}")
-    
-    def consultar_euro(self):
-        indicador = "euro"
-        url = f"https://mindicador.cl/api/{indicador}"
-        response = requests.get(url)
-        data = response.json()
-
-        print(f"Valor actual del {data['nombre']}:")
-        print(f"${data['serie'][0]['valor']}")    
-        
-    def consultar_uf_reciente(self):
-        indicador = "uf"
-        url = f"https://mindicador.cl/api/{indicador}"
-        response = requests.get(url)
-        data = response.json()
-
-        table = PrettyTable()
-        table.field_names = ["Fecha", "Valor"]
-
-        for item in data['serie'][:10]:  # Mostrar los últimos 10 valores
-            table.add_row([item['fecha'][:10], f"${item['valor']}"])
-
-        print(f"Valores recientes de {data['nombre']}:")
-        print(table)
+    def mostrar_todos_los_indicadores(self):
+        self.ind.mostrar_info_api()
